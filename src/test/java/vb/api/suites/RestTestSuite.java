@@ -66,6 +66,17 @@ public class RestTestSuite {
     }
 
     @Test
+    public void verifyChangeFIOBadRequest(){
+        int status = changeFIOBadRequest(UserData.LAST_NAME_NEW, UserData.FIRST_NAME_NEW, UserData.MIDDLE_NAME_NEW);
+        Assert.assertEquals(status, 400, "status code not match");
+        //проверяем, что данные не изменились
+        User meModel = getMeModel();
+        Assert.assertEquals(meModel.getLast_name(), UserData.LAST_NAME, "last name not match");
+        Assert.assertEquals(meModel.getFirst_name(), UserData.FIRST_NAME, "first name not match");
+        Assert.assertEquals(meModel.getMiddle_name(), UserData.MIDDLE_NAME, "middle name not match");
+    }
+
+    @Test
     public void verifyAdditional(){
         User meModel=getMeModel();
         Assert.assertEquals(meModel.getEmail(), UserData.EMAIL, "email name not match");
@@ -102,6 +113,24 @@ public class RestTestSuite {
                 .header("Authorization", "Bearer " + authorizationToken)
                 .post(ClientResponse.class, formData);
         client.destroy();
+    }
+
+    public int changeFIOBadRequest(String lastName, String firstName, String middleName){
+
+        ClientConfig clientConfig = new DefaultClientConfig();
+        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+        Client client = Client.create(clientConfig);
+        MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+        formData.add("last_name", lastName);
+        formData.add("first_name", firstName);
+                WebResource webResource = client
+                .resource(ME_URL);
+        ClientResponse responseMe = webResource.accept("application/json").header(HttpHeaders.USER_AGENT, USER_AGENT)
+                .header("Authorization", "Bearer " + authorizationToken)
+                .post(ClientResponse.class, formData);
+        int status = responseMe.getStatus();
+        client.destroy();
+        return status;
     }
 
     public String getAuthorizationCode(){

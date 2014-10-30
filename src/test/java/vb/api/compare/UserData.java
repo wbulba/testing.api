@@ -7,7 +7,9 @@ public class UserData {
 
     public static final String ID="20495220";
     public static final String FIRST_NAME = "Владимир";
+    public static final String FIRST_NAME_NEW = "Сергей";
     public static final String LAST_NAME = "Бульба";
+    public static final String LAST_NAME_NEW = "Картошкин";
     public static final String MIDDLE_NAME = null;
     public static final String MIDDLE_NAME_NEW = "Александрович";
     public static final String EMAIL = "wbulba@mail.ru";
